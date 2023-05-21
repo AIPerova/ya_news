@@ -70,3 +70,10 @@ def all_comments(news, author):
         comment.save()
         all_comments.append(comment)
     return all_comments
+
+
+@pytest.fixture
+def comment_form_data():
+    return {
+        'text': 'Новый текст',
+    }
