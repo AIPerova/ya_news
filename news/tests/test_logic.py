@@ -11,8 +11,6 @@ User = get_user_model()
 
 
 class TestCommentCreation(TestCase):
-    # Текст комментария понадобится в нескольких местах кода, 
-    # поэтому запишем его в атрибуты класса.
     COMMENT_TEXT = 'Текст комментария'
 
     @classmethod
@@ -28,8 +26,6 @@ class TestCommentCreation(TestCase):
         cls.form_data = {'text': cls.COMMENT_TEXT}
 
     def test_anonymous_user_cant_create_comment(self):
-        # Совершаем запрос от анонимного клиента, в POST-запросе отправляем
-        # предварительно подготовленные данные формы с текстом комментария.     
         self.client.post(self.url, data=self.form_data)
         # Считаем количество комментариев.
         comments_count = Comment.objects.count()
@@ -71,9 +67,6 @@ class TestCommentCreation(TestCase):
 
 
 class TestCommentEditDelete(TestCase):
-    # Тексты для комментариев не нужно дополнительно создавать 
-    # (в отличие от объектов в БД), им не нужны ссылки на self или cls, 
-    # поэтому их можно перечислить просто в атрибутах класса.
     COMMENT_TEXT = 'Текст комментария'
     NEW_COMMENT_TEXT = 'Обновлённый комментарий'
 
@@ -85,9 +78,9 @@ class TestCommentEditDelete(TestCase):
         news_id = cls.news.id
         # Формируем адреса, которые понадобятся для тестов.
         cls.url = reverse('news:detail', args=(news_id,))  # Адрес новости.
-        cls.url_to_comments = cls.url + '#comments'  # Адрес блока с комментариями.
-        cls.edit_url = reverse('news:edit', args=(news_id,))  # URL для редактирования.
-        cls.delete_url = reverse('news:delete', args=(news_id,))  # URL для удаления.
+        cls.url_to_comments = cls.url + '#comments'
+        cls.edit_url = reverse('news:edit', args=(news_id,))
+        cls.delete_url = reverse('news:delete', args=(news_id,))
         # Создаём пользователя - автора комментария.
         cls.author = User.objects.create(username='Автор комментария')
         # Создаём клиент для пользователя-автора.
