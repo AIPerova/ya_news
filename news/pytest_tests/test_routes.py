@@ -6,20 +6,21 @@ from pytest_django.asserts import assertRedirects
 
 
 @pytest.mark.parametrize(
-    'name',
-    ('news:home', 'users:login', 'users:logout', 'users:signup',)
+    'name, args',
+    (('news:home', None),
+     ('users:login', None),
+     ('users:logout', None),
+     ('users:signup', None),
+     ('news:detail', pytest.lazy_fixture('id_for_news')),
+     ),
 )
-def test_home_availability_for_anonymous_user(client, name, db):
-    """Главная страница доступна всем"""
-    url = reverse(name)
+def test_home_availability_for_anonymous_user(db,
+                                              client,
+                                              name,
+                                              args,):
+    """Тестирование страниц доступных всем пользователям"""
+    url = reverse(name, args=args)
     response = client.get(url)
-    assert response.status_code == HTTPStatus.OK
-
-
-def test_page_detail_for_anonymous_user(admin_client, id_for_news, db):
-    """Страница отдельной новости доступна всем """
-    url = reverse('news:detail', args=(id_for_news))
-    response = admin_client.get(url)
     assert response.status_code == HTTPStatus.OK
 
 
@@ -38,6 +39,7 @@ def test_pages_availability_for_different_users(db, parametrized_client,
                                                 name,
                                                 id_for_comment,
                                                 expected_status,):
+    """Тестирование доступа к страницам залогиненным пользователям"""
     url = reverse(name, args=(id_for_comment))
     response = parametrized_client.get(url)
     assert response.status_code == expected_status
