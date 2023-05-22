@@ -18,9 +18,9 @@ def test_pages_contains_form(author_client, name, args):
     assert 'form' in response.context
 
 
-def test_news_count(db, all_news, admin_client):
+def test_news_count(db, all_news, client):
     """Тестирование кол-ва отображения новостей на главной"""
-    response = admin_client.get(reverse('news:home'))
+    response = client.get(reverse('news:home'))
     object_list = response.context['object_list']
     news_count = len(object_list)
     assert news_count == settings.NEWS_COUNT_ON_HOME_PAGE

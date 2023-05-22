@@ -16,9 +16,9 @@ def test_home_availability_for_anonymous_user(client, name, db):
     assert response.status_code == HTTPStatus.OK
 
 
-def test_page_detail_for_anonymous_user(admin_client, news, db):
+def test_page_detail_for_anonymous_user(admin_client, id_for_news, db):
     """Страница отдельной новости доступна всем """
-    url = reverse('news:detail', args=(news.id,))
+    url = reverse('news:detail', args=(id_for_news))
     response = admin_client.get(url)
     assert response.status_code == HTTPStatus.OK
 
@@ -36,9 +36,9 @@ def test_page_detail_for_anonymous_user(admin_client, news, db):
 )
 def test_pages_availability_for_different_users(db, parametrized_client,
                                                 name,
-                                                comment,
+                                                id_for_comment,
                                                 expected_status,):
-    url = reverse(name, args=(comment.id,))
+    url = reverse(name, args=(id_for_comment))
     response = parametrized_client.get(url)
     assert response.status_code == expected_status
 

@@ -26,10 +26,10 @@ def test_user_can_create_comment(db,
 def test_anonymous_user_cant_create_comment(db,
                                             client,
                                             comment_form_data,
-                                            news):
+                                            id_for_news):
     """Тестирование невозможности комментирования анонимом"""
 
-    url = reverse('news:detail', args=(news.id,))
+    url = reverse('news:detail', args=(id_for_news))
     response = client.post(url, data=comment_form_data)
     login_url = reverse('users:login')
     expected_url = f'{login_url}?next={url}'
@@ -83,11 +83,11 @@ def test_other_user_cant_edit_comment(db,
     assert comment.author == author
 
 
-def test_author_can_delete_comment(author_client, comment, news):
+def test_author_can_delete_comment(author_client, id_for_comment, id_for_news):
     """Автор может удалить свой комментарий"""
-    url = reverse('news:delete', args=(comment.id,))
+    url = reverse('news:delete', args=(id_for_comment))
     response = author_client.post(url)
-    url_add = reverse('news:detail', args=(news.id,))
+    url_add = reverse('news:detail', args=(id_for_news))
     assertRedirects(response, f'{url_add}#comments')
     assert Comment.objects.count() == 0
 
